@@ -1,7 +1,10 @@
 package com.example.demo.dto.region;
 
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import java.util.UUID;
 
 public class UpdateRegionRequest {
 
@@ -9,7 +12,7 @@ public class UpdateRegionRequest {
     @Size(max = 100, message = "name must not exceed 100 characters")
     private String name;
 
-    private boolean enabled;
+    private UUID parentUuid;
 
     public String getName() {
         return name;
@@ -19,11 +22,41 @@ public class UpdateRegionRequest {
         this.name = name;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public UUID getParentUuid() {
+        return parentUuid;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setParentUuid(UUID parentUuid) {
+        this.parentUuid = parentUuid;
     }
 }
+
+
+//
+//import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.Size;
+//
+//public class UpdateRegionRequest {
+//
+//    @NotBlank(message = "name is required")
+//    @Size(max = 100, message = "name must not exceed 100 characters")
+//    private String name;
+//
+//    private boolean enabled;
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public boolean isEnabled() {
+//        return enabled;
+//    }
+//
+//    public void setEnabled(boolean enabled) {
+//        this.enabled = enabled;
+//    }
+//}

@@ -10,7 +10,6 @@ import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.OrderStatusHistoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -66,7 +65,7 @@ public class OrderService {
 
         Address address = addressService.getActiveEntityBelongingToCustomer(request.getAddressId(), request.getCustomerId());
 
-        if (!address.getRegion().isEnabled() || address.getRegion().isDeleted()) {
+        if (!address.getRegion().isEnabled()) {
             throw new ResourceNotFoundException(
                     "Region of the address is disabled or deleted. regionId="
                             + address.getRegion().getId());
