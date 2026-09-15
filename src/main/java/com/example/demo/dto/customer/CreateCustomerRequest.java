@@ -1,0 +1,59 @@
+package com.example.demo.dto.customer;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+public class CreateCustomerRequest {
+
+    @NotBlank(message = "firstName is required")
+    @Size(max = 50, message = "firstName must not exceed 50 characters")
+    private String firstName;
+
+    @NotBlank(message = "lastName is required")
+    @Size(max = 50, message = "lastName must not exceed 50 characters")
+    private String lastName;
+
+    @NotBlank(message = "mobile is required")
+    @Pattern(
+            regexp = "^09\\d{9}$",
+            message = "mobile must be 11 digits and start with 09"
+    )
+    private String mobile;
+
+    @NotBlank(message = "nationalCode is required")
+    @Pattern(regexp = "\\d{10}", message = "nationalCode must be exactly 10 digits")
+    private String nationalCode;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getNationalCode() {
+        return nationalCode;
+    }
+
+    public void setNationalCode(String nationalCode) {
+        this.nationalCode = nationalCode;
+    }
+}
