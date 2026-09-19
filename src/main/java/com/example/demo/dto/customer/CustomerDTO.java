@@ -14,27 +14,27 @@ public class CustomerDTO {
     private UUID uuid;
 
     @Pattern(
-            regexp = "^[\\u0600-\\u06FF\\s]+$",
-            message = "letter only"
+            regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
+            message = "Only Persian letters, dots, dashes, and English digits are allowed."
     )
     @NotBlank(message = "name is mandatory")
     private String firstName;
 
     @Pattern(
-            regexp = "^[\\u0600-\\u06FF\\s]+$",
-            message = "نام باید فقط شامل حروف فارسی و فاصله باشد"
+            regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
+            message = "Only Persian letters, dots, dashes, and English digits are allowed."
     )
     @NotBlank(message = "letter only")
     private String lastName;
 
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(
-            regexp = "^(?:\\+98|0098)?09[0-9]{9}$",
-            message = "Invalid Iranian mobile number"
+            regexp = "^09\\d{9}$",
+            message = "mobile must be 11 digits and start with 09"
     )
     private String phoneNumber;
 
-    @Pattern(regexp = "[0-9]{10}", message = "National ID must be exactly 10 digits")
+    @Pattern(regexp = "\\d{10}", message = "nationalCode must be exactly 10 digits")
     @NotBlank(message = "National ID number is mandatory")
     private String nationalID;
 

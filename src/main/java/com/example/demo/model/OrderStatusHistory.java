@@ -3,6 +3,8 @@ package com.example.demo.model;
 
 import com.example.demo.enums.OrderStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 
@@ -27,17 +29,11 @@ public class OrderStatusHistory {
     private OrderStatus toStatus;
 
     @Column(name = "changed_at", nullable = false)
+    @UpdateTimestamp
     private LocalDateTime changedAt;
 
     @Column(length = 500)
     private String comment;
-
-    @PrePersist
-    protected void onCreate() {
-        if (changedAt == null) {
-            changedAt = LocalDateTime.now();
-        }
-    }
 
     public Long getId() {
         return id;

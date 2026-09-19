@@ -1,18 +1,23 @@
 package com.example.demo.dto.services;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import java.util.UUID;
 
 public class UpdateServiceCategoryRequest {
 
     @NotBlank(message = "name is required")
+    @Pattern(
+            regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
+            message = "Only Persian letters, dots, dashes, and English digits are allowed."
+    )
     @Size(max = 100, message = "name must not exceed 100 characters")
     private String name;
 
     private boolean enabled;
 
-    private Long parentId;
+    private UUID parentId;
 
     public String getName() {
         return name;
@@ -30,40 +35,11 @@ public class UpdateServiceCategoryRequest {
         this.enabled = enabled;
     }
 
-    public Long getParentId() {
+    public UUID getParentId() {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    public void setParentId(UUID parentId) {
         this.parentId = parentId;
     }
 }
-
-//
-//import jakarta.validation.constraints.NotBlank;
-//import jakarta.validation.constraints.Size;
-//
-//public class UpdateServiceCategoryRequest {
-//
-//    @NotBlank(message = "name is required")
-//    @Size(max = 100, message = "name must not exceed 100 characters")
-//    private String name;
-//
-//    private boolean enabled;
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public boolean isEnabled() {
-//        return enabled;
-//    }
-//
-//    public void setEnabled(boolean enabled) {
-//        this.enabled = enabled;
-//    }
-//}

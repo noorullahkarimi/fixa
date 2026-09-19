@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -21,14 +22,17 @@ public class ServiceCategoryController {
         this.service = service;
     }
 
+
+    // it return all child & parent
     @GetMapping
     public ResponseEntity<List<ServiceCategoryResponse>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ServiceCategoryResponse> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    @GetMapping("/{uuid}")
+    public ResponseEntity<ServiceCategoryResponse> findByUuid(
+            @NotNull @PathVariable UUID uuid) {
+        return ResponseEntity.ok(service.findByUuid(uuid));
     }
 
     @PostMapping
@@ -38,17 +42,11 @@ public class ServiceCategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     public ResponseEntity<ServiceCategoryResponse> update(
             @NotNull
-            @PathVariable Long id,
+            @PathVariable UUID uuid,
             @Valid @RequestBody UpdateServiceCategoryRequest request) {
-        return ResponseEntity.ok(service.update(id, request));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDelete(@NotNull @PathVariable Long id) {
-        service.softDelete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(service.update(uuid, request));
     }
 }

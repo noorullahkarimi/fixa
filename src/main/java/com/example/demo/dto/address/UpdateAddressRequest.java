@@ -1,25 +1,46 @@
 package com.example.demo.dto.address;
 
 import jakarta.validation.constraints.*;
+import java.util.UUID;
 
 public class UpdateAddressRequest {
 
     @NotBlank(message = "details is required")
     @Size(max = 500, message = "details must not exceed 500 characters")
+    @Pattern(
+            regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
+            message = "Only Persian letters, dots, dashes, spaces, and English digits are allowed."
+    )
     private String details;
 
-    @NotNull(message = "regionId is required")
-    private Long regionId;
+    @NotNull(message = "regionUuid is required")
+    private UUID regionUuid;
 
     @NotNull(message = "latitude is required")
-    @DecimalMin(value = "-90.0", message = "latitude must be >= -90")
+    @DecimalMin(value = "0", message = "latitude must be >= 0")
     @DecimalMax(value = "90.0", message = "latitude must be <= 90")
     private Double latitude;
 
     @NotNull(message = "longitude is required")
-    @DecimalMin(value = "-180.0", message = "longitude must be >= -180")
+    @DecimalMin(value = "0", message = "longitude must be >= 0")
     @DecimalMax(value = "180.0", message = "longitude must be <= 180")
     private Double longitude;
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public UUID getRegionUuid() {
+        return regionUuid;
+    }
+
+    public void setRegionUuid(UUID regionUuid) {
+        this.regionUuid = regionUuid;
+    }
 
     public Double getLatitude() {
         return latitude;
@@ -35,21 +56,5 @@ public class UpdateAddressRequest {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public Long getRegionId() {
-        return regionId;
-    }
-
-    public void setRegionId(Long regionId) {
-        this.regionId = regionId;
     }
 }

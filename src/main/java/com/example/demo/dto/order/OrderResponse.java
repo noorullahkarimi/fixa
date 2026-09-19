@@ -1,30 +1,53 @@
 package com.example.demo.dto.order;
 import com.example.demo.enums.OrderStatus;
-
+import java.util.UUID;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class OrderResponse {
 
-    private Long id;
+
+    private UUID uuid;
+    private UUID customerUuid;
+    private UUID addressUuid;
+    private UUID serviceCategoryUuid;
     private String orderCode;
     private LocalDate requestedDate;
     private OrderStatus status;
-    private Long customerId;
     private String customerFullName;
-    private Long addressId;
     private String addressDetails;
-    private Long serviceCategoryId;
     private String serviceCategoryName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    public Long getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public UUID getCustomerUuid() {
+        return customerUuid;
+    }
+
+    public void setCustomerUuid(UUID customerUuid) {
+        this.customerUuid = customerUuid;
+    }
+
+    public UUID getAddressUuid() {
+        return addressUuid;
+    }
+
+    public void setAddressUuid(UUID addressUuid) {
+        this.addressUuid = addressUuid;
+    }
+    public UUID getServiceCategoryUuid() {
+        return serviceCategoryUuid;
+    }
+
+    public void setServiceCategoryUuid(UUID serviceCategoryUuid) {
+        this.serviceCategoryUuid = serviceCategoryUuid;
     }
 
     public String getOrderCode() {
@@ -51,14 +74,6 @@ public class OrderResponse {
         this.status = status;
     }
 
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
     public String getCustomerFullName() {
         return customerFullName;
     }
@@ -67,28 +82,12 @@ public class OrderResponse {
         this.customerFullName = customerFullName;
     }
 
-    public Long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
-    }
-
     public String getAddressDetails() {
         return addressDetails;
     }
 
     public void setAddressDetails(String addressDetails) {
         this.addressDetails = addressDetails;
-    }
-
-    public Long getServiceCategoryId() {
-        return serviceCategoryId;
-    }
-
-    public void setServiceCategoryId(Long serviceCategoryId) {
-        this.serviceCategoryId = serviceCategoryId;
     }
 
     public String getServiceCategoryName() {

@@ -1,7 +1,12 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
+import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 
 @Entity
@@ -11,6 +16,10 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @UuidGenerator
+    @Column(nullable = false, unique = true, updatable = false)
+    private UUID uuid;
 
     @Column(nullable = false, length = 500)
     private String details;
@@ -33,20 +42,15 @@ public class Address {
     private boolean deleted = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public UUID getUuid() {
+        return uuid;
     }
 
 

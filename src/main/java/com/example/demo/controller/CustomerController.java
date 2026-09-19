@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -20,9 +21,10 @@ public class CustomerController {
         this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    // find user by uuid
+    @GetMapping("/{uuid}")
+    public ResponseEntity<CustomerResponse> findById(@PathVariable UUID uuid) {
+        return ResponseEntity.ok(service.findByUuid(uuid));
     }
 
     @PostMapping
@@ -30,18 +32,5 @@ public class CustomerController {
             @Valid @RequestBody CreateCustomerRequest request) {
         CustomerResponse response = service.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> update(
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateCustomerRequest request) {
-        return ResponseEntity.ok(service.update(id, request));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDelete(@PathVariable Long id) {
-        service.softDelete(id);
-        return ResponseEntity.noContent().build();
     }
 }

@@ -8,10 +8,18 @@ public class CreateCustomerRequest {
 
     @NotBlank(message = "firstName is required")
     @Size(max = 50, message = "firstName must not exceed 50 characters")
+    @Pattern(
+            regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
+            message = "Only Persian letters, dots, dashes, and English digits are allowed."
+    )
     private String firstName;
 
     @NotBlank(message = "lastName is required")
     @Size(max = 50, message = "lastName must not exceed 50 characters")
+    @Pattern(
+            regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
+            message = "Only Persian letters, dots, dashes, and English digits are allowed."
+    )
     private String lastName;
 
     @NotBlank(message = "mobile is required")

@@ -10,7 +10,7 @@ import com.example.demo.model.ServiceCategory;
 import com.example.demo.repository.ServiceCategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.UUID;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,76 +25,71 @@ public class ServiceCategoryService {
 
     @Transactional(readOnly = true)
     public List<ServiceCategoryResponse> findAll() {
+
         List<ServiceCategory> roots = repository.findAllRootActive();
 
         return roots.stream()
                 .map(root -> {
-                    ServiceCategoryResponse rootDto = ServiceCategoryMapper.toResponse(root);
-                    List<ServiceCategoryResponse> children = repository
-                            .findByParentIdAndNotDeleted(root.getId())
-                            .stream()
-                            .map(ServiceCategoryMapper::toResponse)
-                            .collect(Collectors.toList());
+                    ServiceCategoryResponse rootDto =
+                            ServiceCategoryMapper.toResponse(root);
+
+                    List<ServiceCategoryResponse> children =
+                            repository.findByParentIdAndNotDeleted(root.getUuid())
+                                    .stream()
+                                    .map(ServiceCategoryMapper::toResponse)
+                                    .collect(Collectors.toList());
+
                     rootDto.setChildren(children);
+
                     return rootDto;
                 })
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public ServiceCategoryResponse findById(Long id) {
-        ServiceCategory entity = getActiveEntity(id);
-        ServiceCategoryResponse response = ServiceCategoryMapper.toResponse(entity);
 
+    @Transactional(readOnly = true)
+    public ServiceCategoryResponse findByUuid(UUID uuid) {
+        ServiceCategory entity = getActiveEntity(uuid);
+        ServiceCategoryResponse response = ServiceCategoryMapper.toResponse(entity);
 
         if (entity.getParentId() == null) {
             List<ServiceCategoryResponse> children = repository
-                    .findByParentIdAndNotDeleted(entity.getId())
+                    .findByParentIdAndNotDeleted(entity.getUuid())
                     .stream()
                     .map(ServiceCategoryMapper::toResponse)
                     .collect(Collectors.toList());
             response.setChildren(children);
         }
+
         return response;
     }
 
+    // creating new service
     @Transactional
     public ServiceCategoryResponse create(CreateServiceCategoryRequest request) {
-        validateParent(request.getParentId());
+        ServiceCategory parent = validateParent(request.getParentId());
 
-        ServiceCategory entity = ServiceCategoryMapper.toEntity(request);
+        ServiceCategory entity = ServiceCategoryMapper.toEntity(request, parent);
         ServiceCategory saved = repository.save(entity);
+
         return ServiceCategoryMapper.toResponse(saved);
     }
 
+    //updat a service row
     @Transactional
-    public ServiceCategoryResponse update(Long id, UpdateServiceCategoryRequest request) {
-        ServiceCategory entity = getActiveEntity(id);
+    public ServiceCategoryResponse update(UUID uuid, UpdateServiceCategoryRequest request) {
+        ServiceCategory entity = getActiveEntity(uuid);
 
-        // Prevent setting a category as its own parent
-        if (request.getParentId() != null && request.getParentId().equals(id)) {
+        if (request.getParentId() != null && request.getParentId().equals(uuid)) {
             throw new BusinessException("A category cannot be its own parent");
         }
 
-        validateParent(request.getParentId());
+        ServiceCategory parent = validateParent(request.getParentId());
 
-        ServiceCategoryMapper.updateEntity(entity, request);
+        ServiceCategoryMapper.updateEntity(entity, request, parent);
         ServiceCategory saved = repository.save(entity);
+
         return ServiceCategoryMapper.toResponse(saved);
-    }
-
-    @Transactional
-    public void softDelete(Long id) {
-        ServiceCategory entity = getActiveEntity(id);
-        entity.setDeleted(true);
-        repository.save(entity);
-
-
-        List<ServiceCategory> children = repository.findByParentIdAndNotDeleted(id);
-        for (ServiceCategory child : children) {
-            child.setDeleted(true);
-        }
-        repository.saveAll(children);
     }
 
     @Transactional(readOnly = true)
@@ -110,7 +105,26 @@ public class ServiceCategoryService {
         return category;
     }
 
+    @Transactional(readOnly = true)
+    public ServiceCategory getEnabledLeafAndActive(UUID uuid) {
+        ServiceCategory category = repository.findByUuidAndEnabledAndNotDeleted(uuid)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "ServiceCategory not found or is disabled. uuid=" + uuid));
+
+        if (category.getParentId() == null) {
+            throw new BusinessException(
+                    "Only sub-categories can be ordered. Root category is not allowed. uuid=" + uuid);
+        }
+
+        return category;
+    }
     // -------------------- private helpers --------------------
+
+    private ServiceCategory getActiveEntity(UUID uuid) {
+        return repository.findByUuidAndNotDeleted(uuid)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "ServiceCategory not found. uuid=" + uuid));
+    }
 
     private ServiceCategory getActiveEntity(Long id) {
         return repository.findByIdAndNotDeleted(id)
@@ -119,18 +133,38 @@ public class ServiceCategoryService {
     }
 
     private void validateParent(Long parentId) {
+
+        // mean it is category not sub
         if (parentId == null) {
             return;
         }
-
+        //check if there is sub-category so check for parent-id there is
         ServiceCategory parent = repository.findByIdAndNotDeleted(parentId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Parent ServiceCategory not found. id=" + parentId));
 
+        // prevent to make level third of category
+        if (parent.getParentId() != null) {
+            throw new BusinessException(
+                    "Only two levels are supported. Cannot create a sub-category under another sub-category");
+        }
+    }
+
+    private ServiceCategory validateParent(UUID parentUuid) {
+
+        if (parentUuid == null) {
+            return null;
+        }
+
+        ServiceCategory parent = repository.findByUuidAndNotDeleted(parentUuid)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Parent ServiceCategory not found. uuid=" + parentUuid));
 
         if (parent.getParentId() != null) {
             throw new BusinessException(
                     "Only two levels are supported. Cannot create a sub-category under another sub-category");
         }
+
+        return parent;
     }
 }

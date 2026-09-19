@@ -33,6 +33,7 @@ public class AdminRegionController {
                 .body(response);
     }
 
+    // update name and parent id
     @PutMapping("/{uuid}")
     public ResponseEntity<RegionResponse> update(
             @PathVariable UUID uuid,

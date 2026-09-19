@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -21,20 +22,12 @@ public class AddressController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<AddressResponse>> findAll() {
-        return ResponseEntity.ok(service.findAll());
-    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AddressResponse> findById(@NotNull @PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
-    }
-
-    @GetMapping("/by-customer/{customerId}")
-    public ResponseEntity<List<AddressResponse>> findByCustomerId(
-            @NotNull @PathVariable Long customerId) {
-        return ResponseEntity.ok(service.findByCustomerId(customerId));
+    // find all address is belong to this user
+    @GetMapping("/by-customer/{customerUuid}")
+    public ResponseEntity<List<AddressResponse>> findByCustomerUuid(
+            @NotNull @PathVariable UUID customerUuid) {
+        return ResponseEntity.ok(service.findByCustomerUuid(customerUuid));
     }
 
     @PostMapping
@@ -44,16 +37,16 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AddressResponse> update(
-            @NotNull @PathVariable Long id,
-            @Valid @RequestBody UpdateAddressRequest request) {
-        return ResponseEntity.ok(service.update(id, request));
+    @GetMapping("/{uuid}")
+    public ResponseEntity<AddressResponse> findByUuid(
+            @NotNull @PathVariable UUID uuid) {
+        return ResponseEntity.ok(service.findByUuid(uuid));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDelete(@PathVariable Long id) {
-        service.softDelete(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{uuid}")
+    public ResponseEntity<AddressResponse> update(
+            @NotNull @PathVariable UUID uuid,
+            @Valid @RequestBody UpdateAddressRequest request) {
+        return ResponseEntity.ok(service.update(uuid, request));
     }
 }

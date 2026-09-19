@@ -2,15 +2,24 @@ package com.example.demo.dto.order;
 import com.example.demo.enums.OrderStatus;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class OrderStatusHistoryResponse {
 
     private Long id;
-    private Long orderId;
     private OrderStatus fromStatus;
     private OrderStatus toStatus;
     private LocalDateTime changedAt;
     private String comment;
+    private UUID orderUuid;
+
+    public UUID getOrderUuid() {
+        return orderUuid;
+    }
+
+    public void setOrderUuid(UUID orderUuid) {
+        this.orderUuid = orderUuid;
+    }
 
     public Long getId() {
         return id;
@@ -18,14 +27,6 @@ public class OrderStatusHistoryResponse {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
     }
 
     public OrderStatus getFromStatus() {

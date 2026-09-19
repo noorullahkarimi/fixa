@@ -6,6 +6,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,11 +61,36 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
         Map<String, String> body = new HashMap<>();
-        body.put("message", "An unexpected error occurred");
+        body.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
+
+    // for handle errors of validation we defined before
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex) {
+
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+
+        return ResponseEntity
+                .badRequest()
+                .body(body);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<Map<String, String>> handleHandlerMethodValidation(
+            HandlerMethodValidationException ex) {
+
+        Map<String, String> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+
+        return ResponseEntity
+                .badRequest()
+                .body(body);
+    }
+
 }

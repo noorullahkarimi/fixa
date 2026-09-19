@@ -7,18 +7,54 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    @Query("SELECT a FROM Address a WHERE a.deleted = false")
+    @Query("""
+           SELECT a FROM Address a
+           WHERE a.uuid = :uuid
+             AND a.deleted = false
+           """)
+    Optional<Address> findByUuidAndNotDeleted(
+            @Param("uuid") UUID uuid
+    );
+
+    @Query("""
+           SELECT a FROM Address a
+           WHERE a.uuid = :addressUuid
+             AND a.customer.uuid = :customerUuid
+             AND a.deleted = false
+           """)
+    Optional<Address> findByUuidAndCustomerUuidAndNotDeleted(
+            @Param("addressUuid") UUID addressUuid,
+            @Param("customerUuid") UUID customerUuid
+    );
+
+    @Query("""
+           SELECT a FROM Address a
+           WHERE a.deleted = false
+           """)
     List<Address> findAllActive();
 
-    @Query("SELECT a FROM Address a WHERE a.id = :id AND a.deleted = false")
-    Optional<Address> findByIdAndNotDeleted(@Param("id") Long id);
+    @Query("""
+           SELECT a FROM Address a
+           WHERE a.id = :id
+             AND a.deleted = false
+           """)
+    Optional<Address> findByIdAndNotDeleted(
+            @Param("id") Long id
+    );
 
-    @Query("SELECT a FROM Address a WHERE a.customer.id = :customerId AND a.deleted = false")
-    List<Address> findByCustomerIdAndNotDeleted(@Param("customerId") Long customerId);
+    @Query("""
+           SELECT a FROM Address a
+           WHERE a.customer.uuid = :customerUuid
+             AND a.deleted = false
+           """)
+    List<Address> findByCustomerUuidAndNotDeleted(
+            @Param("customerUuid") UUID customerUuid
+    );
 
     @Query("""
            SELECT a FROM Address a
@@ -26,6 +62,8 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
              AND a.customer.id = :customerId
              AND a.deleted = false
            """)
-    Optional<Address> findByIdAndCustomerIdAndNotDeleted(@Param("id") Long id,
-                                                         @Param("customerId") Long customerId);
+    Optional<Address> findByIdAndCustomerIdAndNotDeleted(
+            @Param("id") Long id,
+            @Param("customerId") Long customerId
+    );
 }

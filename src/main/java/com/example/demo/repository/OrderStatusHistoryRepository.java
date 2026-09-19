@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface OrderStatusHistoryRepository extends JpaRepository<OrderStatusHistory, Long> {
 
+    // order by = old to new
     @Query("SELECT h FROM OrderStatusHistory h WHERE h.order.id = :orderId ORDER BY h.changedAt ASC")
     List<OrderStatusHistory> findByOrderIdOrderByChangedAtAsc(@Param("orderId") Long orderId);
 }

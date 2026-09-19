@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.UUID;
 import java.util.List;
 
 @RestController
@@ -19,14 +19,11 @@ public class OrderController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<OrderResponse>> findAll() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> findById(@NotNull @PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    // it should take userid, then shows its own orders
+    @GetMapping("/{uuid}")
+    public ResponseEntity<OrderResponse> findByUuid(
+            @NotNull @PathVariable UUID uuid) {
+        return ResponseEntity.ok(service.findByUuid(uuid));
     }
 
 
@@ -38,24 +35,18 @@ public class OrderController {
     }
 
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<OrderResponse> changeStatus(@NotNull
-            @PathVariable Long id,
+    // change staus order
+    @PatchMapping("/{uuid}/status")
+    public ResponseEntity<OrderResponse> changeStatus(
+            @NotNull @PathVariable UUID uuid,
             @Valid @RequestBody ChangeOrderStatusRequest request) {
-        return ResponseEntity.ok(service.changeStatus(id, request));
+        return ResponseEntity.ok(service.changeStatus(uuid, request));
     }
 
-
-    @GetMapping("/{id}/status-history")
+    @GetMapping("/{uuid}/status-history")
     public ResponseEntity<List<OrderStatusHistoryResponse>> getStatusHistory(
-            @NotNull
-            @PathVariable Long id) {
-        return ResponseEntity.ok(service.getStatusHistory(id));
+            @NotNull @PathVariable UUID uuid) {
+        return ResponseEntity.ok(service.getStatusHistory(uuid));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDelete(@PathVariable Long id) {
-        service.softDelete(id);
-        return ResponseEntity.noContent().build();
-    }
 }

@@ -1,24 +1,27 @@
 package com.example.demo.dto.order;
 
+import java.util.UUID;
+
+
 public class CreateOrderResponse {
 
-    private Long id;
     private String orderCode;
+
+    private UUID uuid;
 
     public CreateOrderResponse() {
     }
 
-    public CreateOrderResponse(Long id, String orderCode) {
-        this.id = id;
+    public CreateOrderResponse(UUID uuid, String orderCode) {
+        this.uuid = uuid;
         this.orderCode = orderCode;
     }
-
-    public Long getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getOrderCode() {

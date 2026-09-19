@@ -3,8 +3,14 @@ package com.example.demo.model;
 
 import com.example.demo.enums.OrderStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.UuidGenerator;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
@@ -13,6 +19,10 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true, updatable = false)
+    @UuidGenerator
+    private UUID uuid;
 
     @Column(name = "order_code", nullable = false, unique = true, length = 20)
     private String orderCode;
@@ -40,26 +50,23 @@ public class Order {
     private boolean deleted = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-
 
     public Long getId() {
         return id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public void setId(Long id) {

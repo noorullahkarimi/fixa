@@ -1,25 +1,30 @@
 package com.example.demo.dto.address;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class AddressResponse {
 
-    private Long id;
+    private UUID uuid;
     private String details;
-    private Long customerId;
-    private Long regionId;
+
+    private UUID customerUuid;
+    private UUID regionUuid;
+
     private Double latitude;
     private Double longitude;
+
     private String regionName;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Long getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getDetails() {
@@ -30,20 +35,36 @@ public class AddressResponse {
         this.details = details;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public UUID getCustomerUuid() {
+        return customerUuid;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setCustomerUuid(UUID customerUuid) {
+        this.customerUuid = customerUuid;
     }
 
-    public Long getRegionId() {
-        return regionId;
+    public UUID getRegionUuid() {
+        return regionUuid;
     }
 
-    public void setRegionId(Long regionId) {
-        this.regionId = regionId;
+    public void setRegionUuid(UUID regionUuid) {
+        this.regionUuid = regionUuid;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getRegionName() {
@@ -68,21 +89,5 @@ public class AddressResponse {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
     }
 }

@@ -20,9 +20,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("SELECT c FROM Customer c WHERE c.uuid = :uuid AND c.deleted = false")
     Optional<Customer> findByUuidAndNotDeleted(@Param("uuid") UUID uuid);
 
+    @Query("SELECT c FROM Customer c WHERE c.uuid = :uuid AND c.deleted = false")
+    Customer findByUuid(@Param("uuid") UUID uuid);
+
     boolean existsByNationalCodeAndDeletedFalse(String nationalCode);
 
     boolean existsByMobile(String mobile);
 
-//    boolean findAllActive();
+    Customer findByMobile(String s);
 }

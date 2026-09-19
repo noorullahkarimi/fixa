@@ -11,7 +11,7 @@ import com.example.demo.model.Region;
 import com.example.demo.repository.AddressRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.UUID;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,49 +45,76 @@ public class AddressService {
     }
 
     @Transactional(readOnly = true)
-    public List<AddressResponse> findByCustomerId(Long customerId) {
+    public List<AddressResponse> findByCustomerUuid(UUID customerUuid) {
+        customerService.getActiveEntity(customerUuid);
 
-        customerService.getActiveEntity(customerId);
-        return addressRepository.findByCustomerIdAndNotDeleted(customerId)
+        return addressRepository.findByCustomerUuidAndNotDeleted(customerUuid)
                 .stream()
                 .map(AddressMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public AddressResponse findByUuid(UUID uuid) {
+        Address entity = getActiveEntity(uuid);
+        return AddressMapper.toResponse(entity);
+    }
+
+
     @Transactional
     public AddressResponse create(CreateAddressRequest request) {
-        Customer customer = customerService.getActiveEntity(request.getCustomerId());
-        Region region = regionService.getEnabledAndActive(request.getRegionId());
 
-        Address entity = AddressMapper.toEntity(request, customer, region);
+        Customer customer =
+                customerService.getActiveEntity(request.getCustomerUuid());
+
+        Region region =
+                regionService.getEnabledAndActive(request.getRegionUuid());
+
+        Address entity =
+                AddressMapper.toEntity(request, customer, region);
+
         Address saved = addressRepository.save(entity);
+
         return AddressMapper.toResponse(saved);
     }
 
     @Transactional
-    public AddressResponse update(Long id, UpdateAddressRequest request) {
-        Address entity = getActiveEntity(id);
-        Region region = regionService.getEnabledAndActive(request.getRegionId());
+    public AddressResponse update(
+            UUID uuid,
+            UpdateAddressRequest request
+    ) {
+        Address entity = getActiveEntity(uuid);
+
+        Region region =
+                regionService.getEnabledAndActive(request.getRegionUuid());
 
         AddressMapper.updateEntity(entity, request, region);
+
         Address saved = addressRepository.save(entity);
+
         return AddressMapper.toResponse(saved);
     }
 
-    @Transactional
-    public void softDelete(Long id) {
-        Address entity = getActiveEntity(id);
-        entity.setDeleted(true);
-        addressRepository.save(entity);
+    // take address and customer id to check if it is belong together or not
+    @Transactional(readOnly = true)
+    public Address getActiveEntityBelongingToCustomer(
+            UUID addressUuid,
+            UUID customerUuid
+    ) {
+        return addressRepository
+                .findByUuidAndCustomerUuidAndNotDeleted(
+                        addressUuid,
+                        customerUuid
+                )
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Address not found or does not belong to the customer."
+                ));
     }
 
-
-    @Transactional(readOnly = true)
-    public Address getActiveEntityBelongingToCustomer(Long addressId, Long customerId) {
-        return addressRepository.findByIdAndCustomerIdAndNotDeleted(addressId, customerId)
+    private Address getActiveEntity(UUID uuid) {
+        return addressRepository.findByUuidAndNotDeleted(uuid)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Address not found or does not belong to the customer. addressId="
-                                + addressId + ", customerId=" + customerId));
+                        "Address not found. uuid=" + uuid));
     }
 
     private Address getActiveEntity(Long id) {
