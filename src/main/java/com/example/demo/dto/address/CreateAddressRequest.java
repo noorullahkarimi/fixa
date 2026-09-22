@@ -3,70 +3,34 @@ package com.example.demo.dto.address;
 
 import jakarta.validation.constraints.*;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CreateAddressRequest {
 
-    @NotBlank(message = "details is required")
-    @Size(max = 500, message = "details must not exceed 500 characters")
+    @NotBlank(message = "{validation.details.required}")
+    @Size(max = 500, message = "{validation.details.max-length}")
     @Pattern(
             regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
-            message = "Only Persian letters, dots, dashes, spaces, and English digits are allowed."
+            message = "{validation.details.invalid}"
     )
     private String details;
 
-    @NotNull(message = "customerUuid is required")
+    @NotNull(message = "{validation.customer.required}")
     private UUID customerUuid;
 
-    @NotNull(message = "regionUuid is required")
+    @NotNull(message = "{validation.region.required}")
     private UUID regionUuid;
 
-    @NotNull(message = "latitude is required")
-    @DecimalMin(value = "0", message = "latitude must be >= 0")
-    @DecimalMax(value = "90.0", message = "latitude must be <= 90")
+    @NotNull(message = "{validation.latitude.required}")
+    @DecimalMin(value = "0", message = "{validation.latitude.min}")
+    @DecimalMax(value = "90.0", message = "{validation.latitude.required}")
     private Double latitude;
 
-    @NotNull(message = "longitude is required")
-    @DecimalMin(value = "0", message = "longitude must be >= 0")
-    @DecimalMax(value = "180.0", message = "longitude must be <= 180")
+    @NotNull(message = "{validation.longitude.max}")
+    @DecimalMin(value = "0", message = "{validation.longitude.min}")
+    @DecimalMax(value = "180.0", message = "{validation.longitude.max}")
     private Double longitude;
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public UUID getCustomerUuid() {
-        return customerUuid;
-    }
-
-    public void setCustomerUuid(UUID customerUuid) {
-        this.customerUuid = customerUuid;
-    }
-
-    public UUID getRegionUuid() {
-        return regionUuid;
-    }
-
-    public void setRegionUuid(UUID regionUuid) {
-        this.regionUuid = regionUuid;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
 }

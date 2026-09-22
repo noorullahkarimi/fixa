@@ -6,12 +6,12 @@ import jakarta.validation.constraints.Pattern;
 
 public class ChangeOrderStatusRequest {
 
-    @NotNull(message = "newStatus is required")
+    @NotNull(message = "{validation.new-status.required}")
     private OrderStatus newStatus;
 
     @Pattern(
             regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
-            message = "Only Persian letters, dots, dashes, and English digits are allowed."
+            message = "{validation.details.invalid}"
     )
     private String comment;
 

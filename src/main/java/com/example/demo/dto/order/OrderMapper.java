@@ -9,7 +9,7 @@ public final class OrderMapper {
     }
 
     public static CreateOrderResponse toCreateResponse(Order entity) {
-        return new CreateOrderResponse(entity.getUuid(), entity.getOrderCode());
+        return new CreateOrderResponse(entity.getOrderCode(), entity.getUuid());
     }
 
     public static OrderResponse toResponse(Order entity) {

@@ -4,10 +4,12 @@ package com.example.demo.model;
 import com.example.demo.enums.OrderStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UpdateTimestamp;
-
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "order_status_histories")
 public class OrderStatusHistory {
@@ -35,51 +37,4 @@ public class OrderStatusHistory {
     @Column(length = 500)
     private String comment;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public OrderStatus getFromStatus() {
-        return fromStatus;
-    }
-
-    public void setFromStatus(OrderStatus fromStatus) {
-        this.fromStatus = fromStatus;
-    }
-
-    public OrderStatus getToStatus() {
-        return toStatus;
-    }
-
-    public void setToStatus(OrderStatus toStatus) {
-        this.toStatus = toStatus;
-    }
-
-    public LocalDateTime getChangedAt() {
-        return changedAt;
-    }
-
-    public void setChangedAt(LocalDateTime changedAt) {
-        this.changedAt = changedAt;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 }

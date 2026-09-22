@@ -1,34 +1,20 @@
 package com.example.demo.dto.order;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.UUID;
 
-
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateOrderResponse {
 
     private String orderCode;
 
     private UUID uuid;
 
-    public CreateOrderResponse() {
-    }
-
-    public CreateOrderResponse(UUID uuid, String orderCode) {
-        this.uuid = uuid;
-        this.orderCode = orderCode;
-    }
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getOrderCode() {
-        return orderCode;
-    }
-
-    public void setOrderCode(String orderCode) {
-        this.orderCode = orderCode;
-    }
 }

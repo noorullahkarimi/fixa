@@ -4,42 +4,23 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Getter
+@Setter
 public class UpdateServiceCategoryRequest {
 
-    @NotBlank(message = "name is required")
+    @NotBlank(message = "{validation.name.required}")
     @Pattern(
             regexp = "^[\\u0600-\\u06FF0-9.\\- ]+$",
-            message = "Only Persian letters, dots, dashes, and English digits are allowed."
+            message = "{validation.name.invalid}"
     )
-    @Size(max = 100, message = "name must not exceed 100 characters")
+    @Size(max = 100, message = "{validation.name.max-length}")
     private String name;
 
     private boolean enabled;
 
     private UUID parentId;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public UUID getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(UUID parentId) {
-        this.parentId = parentId;
-    }
 }
